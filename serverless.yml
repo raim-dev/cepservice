@@ -4,15 +4,39 @@ provider:
   name: aws
   runtime: java17
   region: us-east-1
-  stage: dev
+  stage: ${opt:stage, 'dev'}
   memorySize: 512
   timeout: 15
+  apiGateway:
+    apiKeys:
+      - name: cep-service-api-key-${self:provider.stage}
+        description: API key for CEP Service
+    usagePlan:
+      - apiKey: cep-service-api-key-${self:provider.stage}
+        description: Usage plan for CEP Service
+        throttle:
+          burstLimit: 200
+          rateLimit: 100
+        quota:
+          limit: 5000
+          period: DAY
 
 package:
-  artifact: target/your-app-0.0.1-SNAPSHOT-aws-lambda.jar
+  artifact: target/cepservice-0.0.1-SNAPSHOT.jar
 
 functions:
   api:
-    handler: com.example.LambdaHandler
+    handler: com.br.cepservice.LambdaHandler
     events:
-      - httpApi: '*'
+      - http:
+          path: /api/cep/{cep}
+          method: get
+          private: true
+          request:
+            parameters:
+              paths:
+                cep: true
+      - http:
+          path: /api/logs
+          method: get
+          private: true

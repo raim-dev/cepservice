@@ -130,4 +130,4 @@ jobs:
             --function-name cep-service-lambda \
             --timeout 30 \
             --memory-size 512 \
-            --environment "Variables={SPRING_PROFILES_ACTIVE=prod,AWS_REGION=us-east-1,DYNAMODB_TABLE_NAME=cep-logs}"
+            --environment "Variables={SPRING_PROFILES_ACTIVE=prod,AWS_REGION=us-east-1,DYNAMODB_TABLE_NAME=cep-logs,API_KEYS=${{ secrets.API_KEYS }}}"

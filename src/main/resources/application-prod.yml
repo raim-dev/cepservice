@@ -26,6 +26,9 @@ app:
     enabled: true
     limit: 100
     duration: 60 # seconds
+  # API key security configuration
+  security:
+    api-keys: ${API_KEYS:default-api-key-for-dev}
 
 # AWS Configuration
 aws:
@@ -53,3 +56,4 @@ aws:
     memory: 512
     timeout: 30
     environment: prod
+

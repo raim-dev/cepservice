@@ -6,12 +6,12 @@ Uma aplicação Java com Spring Boot baseada em Clean Architecture para consulta
 
 - **Java 17**
 - **Spring Boot**
-- **Spring Web, Data JPA**
+- **Spring Web, Data JPA, Security**
 - **H2 / PostgreSQL / DynamoDB**
 - **WireMock (simulação de API externa)**
 - **Docker / Docker Compose**
 - **JUnit 5 + Mockito**
-- **AWS Lambda, DynamoDB**
+- **AWS Lambda, API Gateway, DynamoDB**
 - **GitHub Actions (CI/CD)**
 
 ## Arquitetura
@@ -50,6 +50,7 @@ O projeto suporta três ambientes diferentes, cada um com sua própria configura
 - Configurações de throughput e auto-scaling
 - Rate limiting para proteção da API
 - Implantação em AWS Lambda
+- Autenticação via API Key para acesso aos endpoints
 
 ## Testes
 
@@ -63,13 +64,29 @@ O projeto inclui testes abrangentes, incluindo:
   - Erros de servidor externo
   - Timeouts de conexão
 
+## Segurança
+
+A aplicação implementa as seguintes medidas de segurança:
+
+- **Autenticação via API Key**: Em produção, todos os endpoints requerem uma chave de API válida no cabeçalho `X-API-Key`
+- **Rate Limiting**: Limita o número de requisições por período para prevenir abusos
+- **Configuração segura**: Senhas e chaves de API são armazenadas como variáveis de ambiente ou secrets do GitHub
+
+### Configuração da API Key
+
+Para acessar os endpoints em produção, é necessário incluir o cabeçalho `X-API-Key` com uma chave válida em todas as requisições:
+
+```bash
+curl -H "X-API-Key: sua-api-key" https://seu-endpoint-aws.com/api/cep/01001000
+```
+
 ## CI/CD
 
 O pipeline de CI/CD é implementado usando GitHub Actions e inclui:
 
 1. **Teste**: Executa todos os testes em um ambiente PostgreSQL
 2. **Build**: Compila a aplicação com o perfil de produção
-3. **Deploy**: Implanta a aplicação no AWS Lambda e configura o DynamoDB
+3. **Deploy**: Implanta a aplicação no AWS Lambda e configura o DynamoDB com as variáveis de ambiente necessárias
 
 ## Como Executar
 
