@@ -1,13 +1,32 @@
-name: Build and Deploy to AWS Lambda
+name: Build, Test, and Deploy to AWS Lambda
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  test:
+    name: Test
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cepdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout source
@@ -18,9 +37,56 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: maven
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: target/surefire-reports/
+
+  build:
+    name: Build
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
 
       - name: Build with Maven
-        run: mvn clean package -Pprod
+        run: mvn clean package -Pprod -DskipTests
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: application-jar
+          path: target/*.jar
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: application-jar
+          path: target/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -29,8 +95,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Create DynamoDB Table if not exists
+        run: |
+          aws dynamodb describe-table --table-name cep-logs || \
+          aws dynamodb create-table \
+            --table-name cep-logs \
+            --attribute-definitions AttributeName=id,AttributeType=S \
+            --key-schema AttributeName=id,KeyType=HASH \
+            --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+
       - name: Deploy to AWS Lambda
         run: |
           aws lambda update-function-code \
             --function-name cep-service-lambda \
-            --zip-file fileb://target/my-app-1.0-SNAPSHOT.jar
+            --zip-file fileb://target/cepservice-0.0.1-SNAPSHOT.jar
+
+      - name: Update Lambda Configuration
+        run: |
+          aws lambda update-function-configuration \
+            --function-name cep-service-lambda \
+            --timeout 30 \
+            --memory-size 512 \
+            --environment "Variables={SPRING_PROFILES_ACTIVE=prod,AWS_REGION=us-east-1,DYNAMODB_TABLE_NAME=cep-logs}"
