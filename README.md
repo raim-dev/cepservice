@@ -26,7 +26,6 @@ O projeto segue os princípios da **Clean Architecture**, com separação clara 
 - **Infrastructure Layer**: Banco de dados, APIs externas, Docker
 - **Test Layer**: TDD, unit/integration tests com cobertura
 
-
 Veja o diagrama de arquitetura no repositório: `docs/CleanArchitectureDocumentation.pdf`.
 
 
