@@ -1,13 +1,4 @@
 # Test-specific configuration
-app:
-  external-cep-api:
-    base-url: /api/cep/v1
-
-wiremock:
-  server:
-    base-url: http://localhost:8081
-    context-path: /api/cep/v1
-
 spring:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
@@ -22,3 +13,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
+app:
+  external-cep-api:
+    base-url: /api/cep/v1
+
+wiremock:
+  server:
+    base-url: http://localhost:8081
+    context-path: /api/cep/v1

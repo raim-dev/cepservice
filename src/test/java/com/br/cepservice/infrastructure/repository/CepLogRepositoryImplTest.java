@@ -9,15 +9,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@ActiveProfiles("test")
+@Import({CepLogRepositoryImpl.class, CepLogMapper.class})
 class CepLogRepositoryImplTest {
 
     @Autowired
@@ -38,9 +40,7 @@ class CepLogRepositoryImplTest {
                 .dataConsulta(LocalDateTime.now())
                 .respostaApi("{\"logradouro\":\"Praça da Sé\"}")
                 .build();
-
         CepLog saved = repository.salvar(log);
-
         assertNotNull(saved);
         assertNotNull(jpaRepository.findById(saved.getId()).orElse(null));
     }
