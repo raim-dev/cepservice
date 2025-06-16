@@ -1,11 +1,10 @@
-package com.br.cepservice.cepservice.application.service;
+package com.br.cepservice.application.service;
 
-import com.br.cepservice.cepservice.application.gateway.CepGateway;
-import com.br.cepservice.cepservice.application.repository.CepRepository;
-import com.br.cepservice.cepservice.application.usecase.ConsultarCepUseCase;
-import com.br.cepservice.cepservice.domain.model.CepLog;
-import com.br.cepservice.cepservice.domain.model.Endereco;
-import lombok.AllArgsConstructor;
+import com.br.cepservice.application.gateway.CepGateway;
+import com.br.cepservice.infrastructure.repository.CepRepository;
+import com.br.cepservice.application.usecase.ConsultarCepUseCase;
+import com.br.cepservice.domain.model.CepLog;
+import com.br.cepservice.domain.model.Endereco;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

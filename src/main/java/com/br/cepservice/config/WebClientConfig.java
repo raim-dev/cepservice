@@ -1,4 +1,4 @@
-package com.br.cepservice.cepservice.config;
+package com.br.cepservice.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

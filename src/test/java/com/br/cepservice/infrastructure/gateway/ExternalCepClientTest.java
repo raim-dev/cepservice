@@ -1,6 +1,6 @@
-package com.br.cepservice.cepservice.infrastructure.gateway;
+package com.br.cepservice.infrastructure.gateway;
 
-import com.br.cepservice.cepservice.domain.model.Endereco;
+import com.br.cepservice.domain.model.Endereco;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,10 +9,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ExternalCepClientTest {
@@ -33,7 +36,7 @@ class ExternalCepClientTest {
     private ExternalCepClient externalCepClient;
 
     @Test
-    void whenValidCep_shouldReturnEndereco() {
+    void whenValidCep_shouldReturnEndereco() throws Exception {
         // Arrange
         String cep = "01001000";
         String baseUrl = "/api/cep/v1";
@@ -43,20 +46,16 @@ class ExternalCepClientTest {
 
         // Mock the WebClient fluent API chain
         when(webClient.get()).thenReturn(requestHeadersUriSpec);
-        when(requestHeadersUriSpec.uri(eq("{baseUrl}/{cep}"), eq(baseUrl), eq(cep)))
+        when(requestHeadersUriSpec.uri(eq("/api/cep/v1/{cep}"), eq(cep)))
                 .thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(Endereco.class))
                 .thenReturn(Mono.just(expectedEndereco));
 
-        // Use reflection to set the private baseUrl field for testing
-        try {
-            var field = ExternalCepClient.class.getDeclaredField("baseUrl");
-            field.setAccessible(true);
-            field.set(externalCepClient, baseUrl);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set baseUrl for test", e);
-        }
+        // Set private field using reflection
+        Field baseUrlField = ExternalCepClient.class.getDeclaredField("baseUrl");
+        baseUrlField.setAccessible(true);
+        baseUrlField.set(externalCepClient, baseUrl);
 
         // Act
         Endereco result = externalCepClient.buscarPorCep(cep);
@@ -64,6 +63,6 @@ class ExternalCepClientTest {
         // Assert
         assertEquals(expectedEndereco, result);
         verify(webClient).get();
-        verify(requestHeadersUriSpec).uri("{baseUrl}/{cep}", baseUrl, cep);
+        verify(requestHeadersUriSpec).uri("/api/cep/v1/{cep}", cep);
     }
 }

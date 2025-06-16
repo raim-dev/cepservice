@@ -1,11 +1,9 @@
-package com.br.cepservice.cepservice.infrastructure.gateway;
+package com.br.cepservice.infrastructure.gateway;
 
-import com.br.cepservice.cepservice.application.gateway.CepGateway;
-import com.br.cepservice.cepservice.domain.model.Endereco;
-import lombok.RequiredArgsConstructor;
+import com.br.cepservice.application.gateway.CepGateway;
+import com.br.cepservice.domain.model.Endereco;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
@@ -20,6 +18,10 @@ public class ExternalCepClient implements CepGateway {
         this.baseUrl = baseUrl;
     }
 
+    public WebClient getWebClient() {
+        return this.webClient;
+    }
+
     @Override
     public Endereco buscarPorCep(String cep) {
         return webClient.get()
@@ -28,4 +30,6 @@ public class ExternalCepClient implements CepGateway {
                 .bodyToMono(Endereco.class)
                 .block();
     }
+
+
 }

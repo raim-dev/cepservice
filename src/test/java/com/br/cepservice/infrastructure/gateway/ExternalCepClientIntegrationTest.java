@@ -1,9 +1,8 @@
-package com.br.cepservice.cepservice.infrastructure.gateway;
+package com.br.cepservice.infrastructure.gateway;
 
-import com.br.cepservice.cepservice.domain.model.Endereco;
+import com.br.cepservice.domain.model.Endereco;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import org.junit.jupiter.api.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -51,13 +50,11 @@ class ExternalCepClientIntegrationTest {
     @Test
     void shouldReturnEnderecoWhenCepIsValid() {
         Endereco result = externalCepClient.buscarPorCep("01001000");
-
         assertEquals("01001000", result.getCep());
         assertEquals("SP", result.getEstado());
         assertEquals("São Paulo", result.getCidade());
         assertEquals("Sé", result.getBairro());
         assertEquals("Praça da Sé", result.getRua());
-
         // Verify the request was made
         wireMockServer.verify(1, getRequestedFor(urlEqualTo("/api/cep/v1/01001000")));
     }
@@ -66,7 +63,6 @@ class ExternalCepClientIntegrationTest {
     void shouldThrowWhenCepNotFound() {
         wireMockServer.stubFor(get(urlPathMatching("/api/cep/v1/99999999"))
                 .willReturn(aResponse().withStatus(404)));
-
         Assertions.assertThrows(RuntimeException.class, () -> {
             externalCepClient.buscarPorCep("99999999");
         });

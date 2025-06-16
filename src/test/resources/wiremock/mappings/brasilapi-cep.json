@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/api/cep/v1/([0-9]{8})"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "cep-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

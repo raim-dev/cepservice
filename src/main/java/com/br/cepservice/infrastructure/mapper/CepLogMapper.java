@@ -1,8 +1,8 @@
-package com.br.cepservice.cepservice.infrastructure.mapper;
+package com.br.cepservice.infrastructure.mapper;
 
 
-import com.br.cepservice.cepservice.domain.model.CepLog;
-import com.br.cepservice.cepservice.infrastructure.entity.CepLogEntity;
+import com.br.cepservice.domain.model.CepLog;
+import com.br.cepservice.infrastructure.entity.CepLogEntity;
 import org.springframework.stereotype.Component;
 
 @Component

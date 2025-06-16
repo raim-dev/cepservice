@@ -1,4 +1,4 @@
-package com.br.cepservice.cepservice.presentation.dto;
+package com.br.cepservice.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

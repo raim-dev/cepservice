@@ -1,4 +1,4 @@
-package com.br.cepservice.cepservice.domain.model;
+package com.br.cepservice.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

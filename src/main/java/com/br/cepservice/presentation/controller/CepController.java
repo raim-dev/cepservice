@@ -1,4 +1,4 @@
-package com.br.cepservice.presentation.dto.controller;
+package com.br.cepservice.presentation.controller;
 
 import com.br.cepservice.application.usecase.ConsultarCepUseCase;
 import com.br.cepservice.domain.model.Endereco;

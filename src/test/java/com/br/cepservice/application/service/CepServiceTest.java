@@ -1,18 +1,14 @@
-package com.br.cepservice.cepservice.application.service;
+package com.br.cepservice.application.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.br.cepservice.cepservice.application.gateway.CepGateway;
-import com.br.cepservice.cepservice.application.repository.CepRepository;
-import com.br.cepservice.cepservice.domain.model.CepLog;
-import com.br.cepservice.cepservice.domain.model.Endereco;
+import com.br.cepservice.application.gateway.CepGateway;
+import com.br.cepservice.infrastructure.repository.CepRepository;
+import com.br.cepservice.domain.model.CepLog;
+import com.br.cepservice.domain.model.Endereco;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

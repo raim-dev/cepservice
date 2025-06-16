@@ -1,6 +1,6 @@
-package com.br.cepservice.cepservice.application.usecase;
+package com.br.cepservice.application.usecase;
 
-import com.br.cepservice.cepservice.domain.model.Endereco;
+import com.br.cepservice.domain.model.Endereco;
 
 public interface ConsultarCepUseCase {
 

@@ -1,12 +1,10 @@
-package com.br.cepservice.cepservice.presentation.controller;
+package com.br.cepservice.presentation.controller;
 
-import com.br.cepservice.cepservice.application.usecase.ConsultarCepUseCase;
-import com.br.cepservice.cepservice.config.WebClientConfig;
-import com.br.cepservice.cepservice.domain.model.Endereco;
-import com.br.cepservice.cepservice.presentation.dto.controller.CepController;
+import com.br.cepservice.application.usecase.ConsultarCepUseCase;
+import com.br.cepservice.config.WebClientConfig;
+import com.br.cepservice.domain.model.Endereco;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -14,7 +12,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.mockito.Mockito.mock;
