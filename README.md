@@ -5,7 +5,7 @@ Uma aplicação Java com Spring Boot baseada em Clean Architecture para consulta
 
 ## Tecnologias Utilizadas
 
-- **Java 24**
+- **Java 17**
 - **Spring Boot**
 - **Spring Web, Data JPA**
 - **H2 / PostgreSQL**
@@ -13,7 +13,7 @@ Uma aplicação Java com Spring Boot baseada em Clean Architecture para consulta
 - **Docker / Docker Compose**
 - **JUnit 5 + Mockito**
 - **Gitpod (ambiente de desenvolvimento remoto)**
-- **AWS (RDS, ECS – opcional)**
+- **AWS (RDS, ECS)**
 
 
 ## Arquitetura
