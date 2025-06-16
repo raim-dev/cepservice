@@ -1,0 +1,18 @@
+service: cep-app
+
+provider:
+  name: aws
+  runtime: java17
+  region: us-east-1
+  stage: dev
+  memorySize: 512
+  timeout: 15
+
+package:
+  artifact: target/your-app-0.0.1-SNAPSHOT-aws-lambda.jar
+
+functions:
+  api:
+    handler: com.example.LambdaHandler
+    events:
+      - httpApi: '*'
