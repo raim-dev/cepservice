@@ -2,6 +2,7 @@ package com.br.cepservice.config;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -12,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @DisabledIfEnvironmentVariable(named = "SPRING_PROFILES_ACTIVE", matches = "ci")
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
+@Import(TestConfig.class)
 public class TestContainersConfigTest {
 
     @Container

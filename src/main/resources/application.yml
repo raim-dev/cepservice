@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}  # Default to local
+    active: ${SPRING_PROFILES_ACTIVE:dev}  # Default to dev
   application:
     name: cep-service
 

@@ -55,6 +55,10 @@ jobs:
         curl -X POST http://localhost:8081/__admin/mappings/reset
 
     - name: Run Tests
-      run: ./mvnw test -Dspring.profiles.active=ci
+      run: ./mvnw test -Dspring.profiles.active=dev
       env:
-        SPRING_PROFILES_ACTIVE: ci
+        SPRING_PROFILES_ACTIVE: dev
+        SQL_INIT_MODE: always
+        EXTERNAL_API_URL: /api/cep/v1
+        WIREMOCK_URL: http://localhost:8081
+        HIBERNATE_GENERATE_STATISTICS: true

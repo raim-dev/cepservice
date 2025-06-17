@@ -1,18 +1,46 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/cepdb}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
+    # Use H2 for tests if TEST_DATABASE is set to h2, otherwise use PostgreSQL
+    url: ${SPRING_DATASOURCE_URL:${TEST_DATABASE:jdbc:postgresql://localhost:5432/cepdb}}
+    username: ${SPRING_DATASOURCE_USERNAME:${TEST_DATABASE_USERNAME:postgres}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${TEST_DATABASE_PASSWORD:postgres}}
+    # Driver class will be determined based on the URL
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:${TEST_DATABASE_DRIVER:org.postgresql.Driver}}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 20000
+      connection-test-query: SELECT 1
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Dialect will be determined based on the driver
+        dialect: ${HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+        generate_statistics: ${HIBERNATE_GENERATE_STATISTICS:false}
+
+  # Enable schema.sql execution when needed
+  sql:
+    init:
+      mode: ${SQL_INIT_MODE:never}
+      platform: ${SQL_PLATFORM:postgresql}
+
+  # H2 console for development convenience when using H2
+  h2:
+    console:
+      enabled: ${H2_CONSOLE_ENABLED:false}
+      path: /h2-console
 
 app:
   external-cep-api:
-    base-url: https://brasilapi.com.br/api/cep/v1
+    base-url: ${EXTERNAL_API_URL:https://brasilapi.com.br/api/cep/v1}
+
+# WireMock configuration for testing
+wiremock:
+  server:
+    base-url: ${WIREMOCK_URL:http://localhost:8081}
+    context-path: /api/cep/v1

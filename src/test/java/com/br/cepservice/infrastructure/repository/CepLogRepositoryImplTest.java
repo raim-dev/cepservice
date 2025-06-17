@@ -1,5 +1,6 @@
 package com.br.cepservice.infrastructure.repository;
 
+import com.br.cepservice.config.TestConfig;
 import com.br.cepservice.domain.model.CepLog;
 import com.br.cepservice.infrastructure.mapper.CepLogMapper;
 import com.br.cepservice.infrastructure.repository.jpa.CepLogJpaRepository;
@@ -18,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
-@Import({CepLogRepositoryImpl.class, CepLogMapper.class})
+@ActiveProfiles("dev")
+@Import({CepLogRepositoryImpl.class, CepLogMapper.class, TestConfig.class})
 class CepLogRepositoryImplTest {
 
     @Autowired
