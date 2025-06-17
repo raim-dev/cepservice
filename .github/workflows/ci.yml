@@ -1,0 +1,60 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: cepdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      # WireMock service for simulating external API
+      wiremock:
+        image: wiremock/wiremock:2.35.0
+        ports:
+          - 8081:8080
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:8080/__admin/mappings || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Setup WireMock mappings
+      run: |
+        mkdir -p wiremock/mappings
+        cp -r src/test/resources/wiremock/mappings/* wiremock/mappings/
+        mkdir -p wiremock/__files
+        cp -r src/test/resources/wiremock/__files/* wiremock/__files/
+        curl -X POST http://localhost:8081/__admin/mappings/reset
+
+    - name: Run Tests
+      run: ./mvnw test -Dspring.profiles.active=ci
+      env:
+        SPRING_PROFILES_ACTIVE: ci

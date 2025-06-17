@@ -21,6 +21,12 @@ spring:
         format_sql: true
         generate_statistics: true
 
+  # Enable schema.sql execution
+  sql:
+    init:
+      mode: always
+      platform: postgresql
+
 app:
   external-cep-api:
     base-url: /api/cep/v1
